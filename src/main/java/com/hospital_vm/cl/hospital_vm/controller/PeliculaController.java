@@ -32,7 +32,6 @@ public class PeliculaController {
     public ResponseEntity<Pelicula> guardar(@RequestBody Pelicula paciente) {
         Pelicula productoMuevo = peliculaService.save(paciente);
         return ResponseEntity.status(HttpStatus.CREATED).body(productoMuevo);
-    //    return new ResponseEntity<>(productoMuevo, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/{id}")
@@ -45,28 +44,29 @@ public class PeliculaController {
         }
     }
 
-    // @PutMapping("/{id}")
-    // public ResponseEntity<Pelicula> actualizar(@PathVariable Integer id, @RequestBody Pelicula paciente) {
-    //     try {
-    //         Pelicula pac = peliculaService.findById(id);
-    //         pac.setId(id);
-    //         pac.setRun(paciente.getRun());
-    //         pac.setNombres(paciente.getNombres());
-    //         pac.setApellidos(paciente.getApellidos());
-    //         pac.setFechaNacimiento(paciente.getFechaNacimiento());
-    //         pac.setCorreo(paciente.getCorreo());
+    @PutMapping("/{id}")
+    public ResponseEntity<Pelicula> actualizar(@PathVariable Integer id, @RequestBody Pelicula peliculaActualizada) {
+        try {
+            Pelicula peliculaExistente = peliculaService.findById(id);
+             peliculaExistente.setTitulo(peliculaActualizada.getTitulo());
+              peliculaExistente.setDirector(peliculaActualizada.getDirector());
+              peliculaExistente.setGenero(peliculaActualizada.getGenero());
+              peliculaExistente.setFechaEstreno(peliculaActualizada.getFechaEstreno());
+              peliculaExistente.setSinopsis(peliculaActualizada.getSinopsis());
+              peliculaExistente.setDuracion(peliculaActualizada.getDuracion());
+              peliculaExistente.setCalificacion(peliculaActualizada.getCalificacion());
 
-    //         peliculaService.save(pac);
-    //         return ResponseEntity.ok(paciente);
-    //     } catch ( Exception e ) {
-    //         return  ResponseEntity.notFound().build();
-    //     }
-    // }
+             Pelicula peliculaGuardada = peliculaService.save(peliculaExistente);
+        return ResponseEntity.ok(peliculaGuardada);
+        } catch ( Exception e ) {
+            return  ResponseEntity.notFound().build();
+        }
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id) {
         try {
-            // peliculaService.delete(id);
+            peliculaService.delete(id);
             return ResponseEntity.noContent().build();
         } catch ( Exception e ) {
             return  ResponseEntity.notFound().build();
